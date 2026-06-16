@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
+/*
+  에르메스에서 영감을 받은 디자인 토큰.
+  Tailwind v4 의 @theme 에 정의하면 bg-ivory, text-ink, font-serif 처럼 바로 쓸 수 있다.
+*/
+@theme {
+  --color-ivory: #f7f4ef;
+  --color-cream: #efe9df;
+  --color-ink: #1c1c1c;
+  --color-stone: #8a8175;
+  --color-line: #e3ddd2;
+  --color-hermes: #e8590c;
+  --color-hermes-dark: #c9490a;
+
+  --font-serif: var(--font-cormorant), var(--font-noto), "Times New Roman", serif;
+  --font-sans: var(--font-noto), ui-sans-serif, system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: var(--color-ivory);
+  --foreground: var(--color-ink);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 헤딩은 우아한 세리프 */
+h1, h2, h3, .font-display {
+  font-family: var(--font-serif);
+  letter-spacing: 0.01em;
+}
+
+/* 얇은 대문자 라벨 (럭셔리 무드) */
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  color: var(--color-stone);
 }
