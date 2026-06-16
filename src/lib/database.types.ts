@@ -64,6 +64,12 @@ export type Database = {
           order_id: string
           order_name: string
           payment_key: string | null
+          ship_address: string | null
+          ship_address_detail: string | null
+          ship_memo: string | null
+          ship_name: string | null
+          ship_phone: string | null
+          ship_postcode: string | null
           status: string
           user_id: string
         }
@@ -74,6 +80,12 @@ export type Database = {
           order_id: string
           order_name?: string
           payment_key?: string | null
+          ship_address?: string | null
+          ship_address_detail?: string | null
+          ship_memo?: string | null
+          ship_name?: string | null
+          ship_phone?: string | null
+          ship_postcode?: string | null
           status?: string
           user_id: string
         }
@@ -84,6 +96,12 @@ export type Database = {
           order_id?: string
           order_name?: string
           payment_key?: string | null
+          ship_address?: string | null
+          ship_address_detail?: string | null
+          ship_memo?: string | null
+          ship_name?: string | null
+          ship_phone?: string | null
+          ship_postcode?: string | null
           status?: string
           user_id?: string
         }

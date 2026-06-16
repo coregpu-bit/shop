@@ -84,6 +84,22 @@ export default async function OrdersPage() {
                   {formatPrice(order.amount)}
                 </span>
               </div>
+
+              {order.ship_name && (
+                <div className="mt-4 border-t border-line pt-4 text-sm text-stone">
+                  <p className="eyebrow mb-2">배송지</p>
+                  <p>
+                    {order.ship_name} · {order.ship_phone}
+                  </p>
+                  <p className="mt-1">
+                    {order.ship_postcode && `(${order.ship_postcode}) `}
+                    {order.ship_address} {order.ship_address_detail}
+                  </p>
+                  {order.ship_memo && (
+                    <p className="mt-1">요청사항: {order.ship_memo}</p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

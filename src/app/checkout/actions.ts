@@ -4,14 +4,31 @@ import { createClient } from "@/lib/supabase/server";
 
 export type CheckoutItem = { id: string; quantity: number };
 
+export type ShippingInfo = {
+  name: string;
+  phone: string;
+  postcode: string;
+  address: string;
+  addressDetail: string;
+  memo: string;
+};
+
 type CreateOrderResult =
   | { error: string }
-  | { orderId: string; amount: number; orderName: string; customerKey: string };
+  | {
+      orderId: string;
+      amount: number;
+      orderName: string;
+      customerKey: string;
+      customerName: string;
+      customerPhone: string;
+    };
 
 // 결제 요청 전, 서버에서 금액을 다시 계산해 주문을 PENDING 으로 저장한다.
 // (클라이언트가 보낸 가격을 믿지 않고 DB 가격으로 계산 -> 위변조 방지)
 export async function createPendingOrder(
   items: CheckoutItem[],
+  shipping: ShippingInfo,
 ): Promise<CreateOrderResult> {
   const supabase = await createClient();
 
@@ -20,6 +37,11 @@ export async function createPendingOrder(
   } = await supabase.auth.getUser();
   if (!user) return { error: "로그인이 필요합니다." };
   if (!items.length) return { error: "장바구니가 비어 있습니다." };
+
+  // 배송지 필수값 검증 (서버에서도 한 번 더 확인)
+  if (!shipping.name.trim()) return { error: "받는 분 성함을 입력해 주세요." };
+  if (!shipping.phone.trim()) return { error: "연락처를 입력해 주세요." };
+  if (!shipping.address.trim()) return { error: "주소를 입력해 주세요." };
 
   const ids = items.map((i) => i.id);
   const { data: products } = await supabase
@@ -69,6 +91,12 @@ export async function createPendingOrder(
       amount,
       order_name: orderName,
       status: "PENDING",
+      ship_name: shipping.name.trim(),
+      ship_phone: shipping.phone.trim(),
+      ship_postcode: shipping.postcode.trim(),
+      ship_address: shipping.address.trim(),
+      ship_address_detail: shipping.addressDetail.trim(),
+      ship_memo: shipping.memo.trim(),
     })
     .select("id")
     .single();
@@ -85,5 +113,12 @@ export async function createPendingOrder(
     return { error: "주문 항목 저장에 실패했습니다." };
   }
 
-  return { orderId, amount, orderName, customerKey: user.id };
+  return {
+    orderId,
+    amount,
+    orderName,
+    customerKey: user.id,
+    customerName: shipping.name.trim(),
+    customerPhone: shipping.phone.replace(/\D/g, ""),
+  };
 }
